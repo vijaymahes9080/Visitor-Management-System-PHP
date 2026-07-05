@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checked Out Visitors</title>
+  <link rel="stylesheet" href="BootStrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="navbar3.css">
+  <script src="BootStrap/js/jQuery.min.js"></script>
+  <script src="BootStrap/js/bootstrap.min.js"></script>
+  <script src="vms-static-db.js"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#" id="lii">Logged in as: <span id="usernameDisplay"></span></a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="front.html" id="li">Home</a></li>
+      <li><a id="li" href="myform.html">Add Visitor</a></li>
+      <li class="active"><a href="logoutform.html">Checked Out Visitors</a></li>
+      <li><a id="li" href="query_data.html">View Data</a></li> 
+      <li><a id="li" href="javascript:void(0)" onclick="logoutUser()">Logout</a></li> 
+    </ul>
+  </div>
+</nav>
+
+<div>
+  <p><h3 style="padding-left: 25px">These visitors were Logged out Today!</h3></p><br>
+</div>
+
+<div class="row" id="offlineVisitorsGrid" style="padding-left: 25px; padding-right: 25px;">
+  <!-- Filled dynamically -->
+</div>
+
+<script>
+  // Session Security Check
+  const username = checkSession();
+  if (username) {
+    document.getElementById("usernameDisplay").textContent = username;
+  }
+
+  // Load and render checked out visitors today
+  function renderOfflineList() {
+    const offline = getOfflineVisitorsToday();
+    const grid = document.getElementById("offlineVisitorsGrid");
+    grid.innerHTML = "";
+
+    if (offline.length === 0) {
+      grid.innerHTML = '<div class="col-xs-12 text-muted" style="padding-left: 15px;">No visitors checked out today.</div>';
+      return;
+    }
+
+    offline.forEach(visitor => {
+      const col = document.createElement("div");
+      col.className = "col-sm-2";
+
+      col.innerHTML = `
+        <div class="thumbnail" style="width:175px; background-color: #fff; padding: 10px; border-radius: 4px; border: 1px solid #ddd; margin-bottom: 20px;">
+          <p style="text-align:center; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 5px;">${visitor.Name}</p>
+          <p style="font-size: 12px; margin: 3px 0;"><strong>Receipt ID:</strong> ${visitor.ReceiptID}</p>
+          <p style="font-size: 12px; margin: 3px 0;"><strong>Contact:</strong> ${visitor.Contact}</p>
+          <p style="font-size: 12px; margin: 3px 0;"><strong>Time In:</strong> ${visitor.TimeIN}</p>
+          <p style="font-size: 12px; margin: 3px 0;"><strong>Time Out:</strong> ${visitor.TimeOUT}</p>
+          <p style="font-size: 12px; margin: 3px 0;"><strong>Date:</strong> ${visitor.Date}</p>
+          <p style="font-size: 12px; margin: 3px 0;"><strong>Meeting:</strong> ${visitor.meetingTo}</p>
+        </div>
+      `;
+      grid.appendChild(col);
+    });
+  }
+
+  renderOfflineList();
+</script>
+</body>
+</html>

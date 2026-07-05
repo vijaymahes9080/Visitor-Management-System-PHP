@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VMS Dashboard</title>
+  <link rel="stylesheet" href="BootStrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="navbar3.css">
+  <script src="BootStrap/js/jQuery.min.js"></script>
+  <script src="BootStrap/js/bootstrap.min.js"></script>
+  <script src="vms-static-db.js"></script>
+  <style>
+    body {
+      max-width: 100%;
+      height: 100vh;
+      overflow-y: auto;
+      background-color: #f7f9fa;
+    }
+    .navbar {
+      margin-bottom: 0px;
+    }
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+    #col-1 {
+      font-size: 16px;
+    }
+    .popover-title {
+      background: #3EFE00 !important;
+      color: #000000;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#" id="lii">Logged in as: <span id="usernameDisplay"></span></a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li class="active"><a href="front.html">Home</a></li>
+      <li><a id="li" href="myform.html">Add Visitor</a></li>
+      <li><a id="li" href="logoutform.html">Checked Out Visitors</a></li>
+      <li><a id="li" href="query_data.html">View Data</a></li> 
+      <li><a id="li" href="javascript:void(0)" onclick="logoutUser()">Logout</a></li> 
+    </ul>
+  </div>
+</nav>
+
+<div class="container-fluid" style="margin-top: 20px;">
+  <div class="row">
+    <!-- Left Panel: Check Out Form -->
+    <div class="col-sm-3" style="padding-left:30px; border-right: 1px solid #ddd;"> 
+      <div><h3>Check Out Visitor</h3></div>
+      <div style="padding-top:20px;">
+        <form id="checkoutForm">
+          <div class="form-group">
+            <label class="control-label" for="ridInput">Receipt ID:</label>
+            <input class="form-control" id="ridInput" name="rid" type="number" placeholder="Enter Receipt ID." required/>
+          </div>
+          <input id="x" name="logout" value="Checkout" type="submit" class="btn btn-danger" style="margin-top: 5px;">
+        </form>
+        <div id="checkoutStatus" style="margin-top: 15px; font-weight: bold;"></div>
+      </div>
+    </div>
+
+    <!-- Middle Panel: Visitor Details -->
+    <div class="col-sm-5" style="padding-left: 30px; border-right: 1px solid #ddd; min-height: 400px;"> 
+      <h3 style="text-align:center;">Details</h3>
+      <div id="visitorDetailsContainer" style="padding-top: 20px;">
+        <p class="text-muted" style="text-align: center; margin-top: 50px;">Select a visitor from the active list to view details.</p>
+      </div>
+    </div>
+
+    <!-- Right Panel: Active (Online) Visitors List -->
+    <div class="col-sm-4" style="padding-left: 30px;"> 
+      <h3>Active Visitors: <span id="activeCount">0</span></h3>
+      <ul class="list-group" id="activeVisitorsList" style="width:90%; padding-top:20px;">
+        <!-- Filled dynamically -->
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Session Security Check
+  const username = checkSession();
+  if (username) {
+    document.getElementById("usernameDisplay").textContent = username;
+  }
+
+  // Load and render active list
+  function renderActiveList() {
+    const active = getOnlineVisitors();
+    document.getElementById("activeCount").textContent = active.length;
+    
+    const listGroup = document.getElementById("activeVisitorsList");
+    listGroup.innerHTML = "";
+
+    if (active.length === 0) {
+      listGroup.innerHTML = '<li class="list-group-item text-muted">No active visitors online.</li>';
+      return;
+    }
+
+    active.forEach(visitor => {
+      const div = document.createElement("div");
+      div.style.paddingLeft = "5px";
+      div.style.paddingRight = "5px";
+      div.style.marginBottom = "5px";
+
+      const li = document.createElement("li");
+      li.className = "list-group-item";
+      li.style.height = "35px";
+      li.style.paddingTop = "5px";
+
+      const a = document.createElement("a");
+      a.style.fontSize = "15px";
+      a.href = "front.html?rid=" + visitor.ReceiptID;
+      a.textContent = visitor.Name;
+      a.setAttribute("data-toggle", "popover");
+      a.setAttribute("data-trigger", "hover");
+      a.setAttribute("data-html", "true");
+      a.setAttribute("title", `<b>${visitor.Name}</b>`);
+      a.setAttribute("data-content", `Contact: ${visitor.Contact}<br>Time In: ${visitor.TimeIN}<br>Purpose: ${visitor.Purpose}<br>R ID: ${visitor.ReceiptID}`);
+
+      li.appendChild(a);
+      div.appendChild(li);
+      listGroup.appendChild(div);
+    });
+
+    // Initialize Bootstrap popovers
+    $('[data-toggle="popover"]').popover({
+      container: 'body'
+    });
+  }
+
+  // Check query parameters to show details
+  function checkQueryParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const rid = urlParams.get("rid");
+    if (rid) {
+      const visitors = getOnlineVisitors();
+      const visitor = visitors.find(v => v.ReceiptID === parseInt(rid));
+      const detailsContainer = document.getElementById("visitorDetailsContainer");
+
+      if (visitor) {
+        detailsContainer.innerHTML = `
+          <div class="row">
+            <div class="col-sm-12" style="padding-left:25px; font-size:16px;">
+              <p style="border-bottom: 1px solid #eee; padding-bottom: 10px;">
+                <strong>Date:</strong> ${visitor.Date} &nbsp;&nbsp;&nbsp;&nbsp; <strong>Time In:</strong> ${visitor.TimeIN}
+              </p>
+              <p><strong>Name:</strong> ${visitor.Name}</p>
+              <p><strong>Contact No:</strong> ${visitor.Contact}</p>
+              <p><strong>Purpose:</strong> ${visitor.Purpose}</p>
+              <p><strong>Meeting:</strong> ${visitor.meetingTo}</p>
+              <p><strong>Receipt ID:</strong> ${visitor.ReceiptID}</p>
+              <p><strong>Comment:</strong> ${visitor.Comment || 'None'}</p>
+            </div>
+          </div>
+        `;
+      } else {
+        detailsContainer.innerHTML = '<p class="text-danger" style="text-align: center; margin-top: 50px;">Visitor not found or is already checked out.</p>';
+      }
+    }
+  }
+
+  // Handle Checkout submission
+  document.getElementById("checkoutForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const rid = this.rid.value;
+    
+    if (confirm("Are you sure you want to Checkout?")) {
+      const success = checkoutVisitor(rid, username);
+      const statusDiv = document.getElementById("checkoutStatus");
+      if (success) {
+        statusDiv.style.color = "green";
+        statusDiv.textContent = "Done!";
+        this.reset();
+        setTimeout(() => {
+          window.location.href = "front.html";
+        }, 1000);
+      } else {
+        statusDiv.style.color = "red";
+        statusDiv.textContent = "Sorry! No active visitor match found.";
+      }
+    }
+  });
+
+  // Initial runs
+  renderActiveList();
+  checkQueryParams();
+</script>
+</body>
+</html>

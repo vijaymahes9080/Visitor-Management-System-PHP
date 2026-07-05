@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Visitor Badge / Profile</title>
+  <link rel="stylesheet" href="BootStrap/css/bootstrap.min.css">
+  <script src="vms-static-db.js"></script>
+  <style>
+    #col-1 {
+      margin-left: 0;
+    }
+    span {
+      font-size: 20px;
+    }
+    @media print {
+      .hide-from-printer { display: none; }
+    }
+    .row {
+      margin-top: 5%;
+      margin-left: 10%;
+      margin-right: 10%;
+    }
+    .badge-card {
+      background-color: #fff;
+      padding: 30px;
+      border: 3px dashed #747474;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  </style> 
+</head>
+<body>
+  <div class="row">
+    <div class="badge-card">
+      <div id="badgeContent">
+        <!-- Rendered dynamically -->
+      </div>
+      <p style="text-align:center; padding-top:20px; font-weight: bold; color: #555;">
+        NOTE: This visitor badge is only valid for x hours, please return it at the exit!
+      </p>
+      <br>
+      <div style="text-align:center;"> 
+        <button type="button" id="button" class="btn btn-primary hide-from-printer" onclick="window.print()">Print Badge</button> 
+        <a type="button" id="button" class="btn btn-default hide-from-printer" href="front.html">Back</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Session Check
+    const username = checkSession();
+
+    // Fetch last registered visitor details
+    const lastRid = localStorage.getItem("vms_last_registered_rid");
+    if (lastRid) {
+      const visitors = getVisitors();
+      const visitor = visitors.find(v => v.ReceiptID === parseInt(lastRid));
+      const badgeContent = document.getElementById("badgeContent");
+      
+      if (visitor) {
+        badgeContent.innerHTML = `
+          <h2 style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-top:0;">VISITOR BADGE</h2>
+          <p style="font-size: 16px; margin-top: 15px;">
+            <strong>Date:</strong> ${visitor.Date} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Time In:</strong> ${visitor.TimeIN}
+          </p>
+          <br>
+          <p><span><strong>Name:</strong> ${visitor.Name}</span></p>
+          <p><span><strong>Contact No:</strong> ${visitor.Contact}</span></p>
+          <p><span><strong>Purpose:</strong> ${visitor.Purpose}</span></p>
+          <p><span><strong>Meeting:</strong> ${visitor.meetingTo}</span></p>
+          <p><span><strong>Receipt ID:</strong> ${visitor.ReceiptID}</span></p>
+          <p><span><strong>Comment:</strong> ${visitor.Comment || 'None'}</span></p>
+        `;
+      } else {
+        document.getElementById("badgeContent").innerHTML = '<p class="text-danger" style="text-align:center;">No visitor details found.</p>';
+      }
+    } else {
+      document.getElementById("badgeContent").innerHTML = '<p class="text-danger" style="text-align:center;">No visitor details found.</p>';
+    }
+  </script>
+</body>
+</html>

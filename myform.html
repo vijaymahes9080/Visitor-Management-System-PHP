@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Visitor</title>
+  <link rel="stylesheet" href="BootStrap/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="navbar3.css">
+  <script src="BootStrap/js/jQuery.min.js"></script>
+  <script src="BootStrap/js/bootstrap.min.js"></script>
+  <script src="vms-static-db.js"></script>
+  <style>
+    html {
+      position: relative;
+      min-height: 100%;
+    }
+    body {
+      margin-bottom: 40px;
+      background-color: #f7f9fa;
+    }
+    input:required:invalid, input:focus:invalid, input:invalid {
+      border-radius: 5px;
+      border: 1px solid red;
+    }
+    input:required:valid, input:valid {
+      border-radius: 5px;
+      border: 1px solid green;
+    }
+    input[type='number'] {
+      -moz-appearance: textfield;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+    }
+  </style>
+</head>
+<body onload="display_ct();">
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#" id="li">Logged in as: <span id="usernameDisplay"></span></a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="front.html" id="li">Home</a></li>
+      <li class="active"><a href="myform.html">Add Visitor</a></li>
+      <li><a id="li" href="logoutform.html">Checked Out Visitors</a></li>
+      <li><a id="li" href="query_data.html">View Data</a></li> 
+      <li><a id="li" href="javascript:void(0)" onclick="logoutUser()">Logout</a></li> 
+    </ul>
+  </div>
+</nav>
+
+<!-- Live Time and Date Display -->
+<div style="float:right; padding-right:20px; padding-top:10px; text-align: right;">
+  <p id="timeDisplay">Time: <span id="t1" style="font-weight: bold;"></span></p>
+  <p id="dateDisplay">Date: <span id="t2" style="font-weight: bold;"></span></p>
+</div>	 
+
+<div style="margin-left:110px; padding-bottom:12px">
+  <h2>Add Visitor</h2>
+</div>
+
+<div class="row" style="margin-left:100px; margin-right: 100px;">
+  <div class="col-sm-6">
+    <form class="myForm" id="addVisitorForm" style="background-color: #fff; padding: 25px; border-radius: 8px; border: 1px solid #ddd;">
+      <div id="displayError" style="color:red; margin-bottom:15px; font-weight:bold;"></div>
+      
+      <div class="form-group">
+        <label for="name">Name:</label> 
+        <input autocomplete="off" class="form-control" type="text" name="name" id="name" placeholder="Enter Visitor's Name." required/>
+      </div>
+
+      <div class="form-group">
+        <label for="ContactInfo">Contact No.:</label>
+        <input autocomplete="off" class="form-control" type="number" id="ContactInfo" name="cno" placeholder="Enter 10-digit Contact Number." required min="1000000000" max="9999999999"/>
+      </div>
+
+      <div class="form-group">
+        <label for="Purpose">Purpose:</label> 
+        <input autocomplete="off" class="form-control" type="text" name="purpose" id="Purpose" placeholder="Enter Purpose." required maxlength="30"/>
+      </div>
+
+      <div class="form-group">
+        <label for="meetingTo">Meeting to:</label>
+        <input autocomplete="off" class="form-control" type="text" name="MeetingTo" id="meetingTo" placeholder="Whom will they meet?" required maxlength="30"/>
+      </div>
+
+      <div class="form-group">
+        <label for="comment">Comment:</label>  
+        <input autocomplete="off" class="form-control" type="text" name="comment" id="comment" placeholder="Optional comments." maxlength="30">
+      </div>
+      
+      <!-- Webcam Simulation Box -->
+      <div class="form-group" style="margin-top: 20px;">
+        <label>Webcam Integration (Simulated):</label>
+        <div style="width: 100%; height: 180px; background-color: #333; border-radius: 5px; color: #aaa; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+          <span class="glyphicon glyphicon-camera" style="font-size: 32px; margin-bottom: 8px;"></span>
+          <span>Webcam Device: Live Mock Camera Active</span>
+          <span style="font-size: 11px; color: #888; margin-top: 5px;">(Image will auto-associate with registration ID)</span>
+        </div>
+      </div>
+
+      <div>
+        <input id="submitme" type="submit" class="btn btn-success" value="Submit"/>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Session Security Check
+  const username = checkSession();
+  if (username) {
+    document.getElementById("usernameDisplay").textContent = username;
+  }
+
+  // Display Clock script
+  function display_c(){
+    setTimeout('display_ct()', 1000);
+  }
+  
+  function display_ct() {
+    var date = new Date();
+    var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+    var am_pm = date.getHours() >= 12 ? "PM" : "AM";
+    hours = hours < 10 ? "0" + hours : hours;
+    var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+    var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+    var time = hours + ":" + minutes + ":" + seconds + " " + am_pm;
+    
+    document.getElementById('t1').innerHTML = time;
+    
+    var x = new Date();
+    var x1 = (x.getMonth() + 1) + "/" + x.getDate() + "/" + x.getFullYear();
+    document.getElementById('t2').innerHTML = x1;
+    display_c();
+  }
+
+  // Handle submit registration
+  document.getElementById("addVisitorForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = this.name.value.trim();
+    const cno = this.cno.value.trim();
+    const purpose = this.purpose.value.trim();
+    const meeting = this.MeetingTo.value.trim();
+    const comment = this.comment.value.trim();
+    const errorDiv = document.getElementById("displayError");
+
+    if (name === "" || cno.length !== 10 || purpose === "" || meeting === "") {
+      errorDiv.textContent = "Please fill out all required fields correctly (Contact must be 10 digits).";
+      return;
+    }
+
+    errorDiv.textContent = "";
+    
+    // Add visitor via library
+    const rid = addVisitor(name, cno, purpose, meeting, comment, username);
+    
+    // Redirect to profile
+    window.location.href = "user_profile.html";
+  });
+</script>
+</body>
+</html>

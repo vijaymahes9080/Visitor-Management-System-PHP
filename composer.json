@@ -1,0 +1,11 @@
+{
+    "name": "vijaymahes/visitor-management-system-php",
+    "description": "Visitor Management System in PHP",
+    "authors": [
+        {
+            "name": "Vijay Mahes",
+            "email": "Vijaypradhap2004@gmail.com"
+        }
+    ],
+    "require": {}
+}

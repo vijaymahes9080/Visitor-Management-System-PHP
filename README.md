@@ -1,156 +1,105 @@
-# PHP based-Visitor Management System
+# 🏢 Visitor Management System (VMS)
 
-<p>VMS or Visitor Management System is an utility for the receptionists who have to maintain a bulky and a very-hard-to-maintain record books for all the visitors that visit the company for their various reasons.</p>
+[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-blue.svg?style=for-the-badge&logo=php)](https://www.php.net/)
+[![MySQL](https://img.shields.io/badge/MySQL-Database-orange.svg?style=for-the-badge&logo=mysql)](https://www.mysql.com/)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-v3.3.7-purple.svg?style=for-the-badge&logo=bootstrap)](https://getbootstrap.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-<p>VMS has 4 sub- sections, Front Page (Home), Add Visitor (for adding new visitors), View Data (for getting the visitor details - all fields) and a Logged out Visitor page that shows Logged out visitor data for the present day!</p>  
+An elegant, secure, and user-friendly digital utility for front-desk receptionists to seamlessly register and manage company visitors, replacing traditional, bulky paper logs.
 
-<h3>DataBase Connects :</h3>
+---
 
-The project uses MySQLi as of now, to integrate the connections use the following 'keys';
+## 🎨 User Interface Mockups
 
-<h3>DataBase Name = db_vms</h3> (stores visitor details and user details)
-  <h4>Table = info_visitor</h4>
-   
-  
- <table>
-  <tr>
-  <th>N A M E</th>
-  <th>T Y P E</th>
-  <th>E X T R A</th>
-  </tr>
-  <tr>
-  <td>Serial</td>
-  <td>int(11)</td>
-  <td>AUTO_INCREMENT</td>
-  </tr>
-   <tr>
-  <td>Name</td>
-  <td>char(50)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>Contact</td>
-  <td>bigint(10)</td>
-  <td> </td>
-  </tr>
-   <tr>
-  <td> Purpose</td>
-  <td>varchar(100)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>meetingTo</td>
-  <td>varchar(100)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>day</td>
-  <td>varchar(50)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>month</td>
-  <td>int(2)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>year</td>
-  <td>int(4)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>Date</td>
-  <td>date</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>TimeIN</td>
-  <td>time</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>ReceiptID</td>
-  <td>int(6)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>Status</td>
-  <td>varchar(100)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>Comment</td>
-  <td>varchar(100)</td>
-  <td></td>
-  </tr>
-  
-  <tr>
-  <td>TimeOUT</td>
-  <td>time</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>registeredBy</td>
-  <td>varchar(30)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>loggedOutBy</td>
-  <td>varchar(30)</td>
-  <td></td>
-  </tr>
-   <tr>
-  <td>imagePath</td>
-  <td>varchar(100)</td>
-  <td></td>
-  
-  </tr>
-  <tr>
-  <td>StudentName</td>
-  <td>varchar(40)</td>
-  <td></td>
-  </tr>
-  <tr>
-  <td>courseYear</td>
-  <td>int(1)</td>
-  <td></td>
-  </tr> 
-  <tr>
-  <td>Hostel</td>
-  <td>varchar(80)</td>
-  <td></td>
-  </tr> 
-    </table>
-  
-  
- 
-<h4>Table Name = login_info</h4>
-<table>
-<tr>
-<th>N A M E</th>
-<th>T Y P E</th>
-<th>E X T R A</th>
-</tr>
-<tr>
-<td>SnoPrimary</td>
-<td>int(11)</td>
-<td>AUTO_INCREAMENT</td>
-</tr>
-<tr>
-<td>userName</td>
-<td>varchar(30)</td>
-<td>latin1_general_cs</td>
-</tr>
-<tr>
-<td>pass</td>
-<td>varchar(30)</td>
-<td>latin1_general_cs</td>
-</tr>
+Here is a visual preview of the Visitor Management System's modern design and dashboard architecture:
 
-</table>
+| 📊 Admin Dashboard | 📝 Visitor Registration |
+| :---: | :---: |
+| ![Admin Dashboard Mockup](assets/dashboard_mockup.png) | ![Registration Form Mockup](assets/registration_mockup.png) |
 
+---
 
-Project Development <b>FINISHED SUCCESSFULLY</b>
+## ✨ Features
 
+- **📊 Modern Dashboard**: Instant analytics on total check-ins, active (online) visitors, and logged-out history.
+- **📝 Easy Registration**: Intuitive form to record guest names, contact info, meeting purposes, and hosts.
+- **📸 Webcam Support**: Capture visitor photos in real-time during registration.
+- **🕒 Real-time Logs**: Keep track of automatic Time-In and Time-Out timestamps.
+- **🔍 Quick Search & View**: Retrieve visitor logs, receipt IDs, and detailed fields.
+- **🔒 Secure Authentication**: Built-in login protection for receptionists.
 
-BY ~ Vijay Mahes
+---
+
+## 🛠️ Technology Stack
+
+- **Backend**: PHP (MySQLi connections)
+- **Frontend**: HTML5, CSS3, JavaScript, jQuery
+- **UI Framework**: Bootstrap v3
+- **Media**: WebcamJS library integration for hardware capture
+
+---
+
+## 🗄️ Database Setup & Structure
+
+The project relies on a MySQL database named `db_vms`. Import the `db_vms.sql` file to set up the structure.
+
+### 📋 Table: `info_visitor`
+Stores the detailed check-in records for all visitors.
+
+| Field Name | Data Type | Key / Extra | Description |
+| :--- | :--- | :--- | :--- |
+| **Serial** | `int(11)` | `PRIMARY KEY` (Auto-Increment) | Unique log ID |
+| **Name** | `char(50)` | | Visitor's full name |
+| **Contact** | `bigint(10)` | | Phone number |
+| **Purpose** | `varchar(100)` | | Purpose of visit |
+| **meetingTo** | `varchar(100)` | | Person being visited |
+| **day** | `varchar(50)` | | Day of visit |
+| **month** | `int(2)` | | Month of visit |
+| **year** | `int(4)` | | Year of visit |
+| **Date** | `date` | | Current date |
+| **TimeIN** | `time` | | Check-in time |
+| **ReceiptID** | `int(6)` | | Automatically generated receipt code |
+| **Status** | `varchar(100)` | | Online/Offline status |
+| **Comment** | `varchar(100)` | | Notes or description |
+| **TimeOUT** | `time` | | Check-out time |
+| **registeredBy** | `varchar(30)` | | Logging user username |
+| **loggedOutBy** | `varchar(30)` | | Logout registrar username |
+| **imagePath** | `varchar(100)` | | Path to visitor webcam capture |
+| **StudentName** | `varchar(40)` | | Optional reference name |
+| **courseYear** | `int(1)` | | Optional course year reference |
+| **Hostel** | `varchar(80)` | | Optional hostel details |
+
+### 🔑 Table: `login_info`
+Stores registrar / receptionist user credentials.
+
+| Field Name | Data Type | Key / Extra | Description |
+| :--- | :--- | :--- | :--- |
+| **SnoPrimary** | `int(11)` | `PRIMARY KEY` (Auto-Increment) | User serial number |
+| **userName** | `varchar(30)` | | Login username |
+| **pass** | `varchar(30)` | | Login password |
+
+---
+
+## 🚀 Installation & Local Setup
+
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/vijaymahes9080/Visitor-Management-System-PHP.git
+   ```
+2. **Move to Server Directory**:
+   Place the project folder inside your local server's web directory (e.g., `htdocs` for XAMPP or `www` for WampServer).
+3. **Database Configuration**:
+   - Start your Apache and MySQL servers.
+   - Access `phpMyAdmin` and create a database named `db_vms`.
+   - Import the `db_vms.sql` file provided in the repository.
+   - Adjust `db_connect_Login.php` and `db_connect_db_new.php` with your local database credentials if necessary.
+4. **Run Application**:
+   Open your browser and navigate to `http://localhost/Visitor-Management-System-PHP/index.php`.
+
+---
+
+## 👨‍💻 Author
+
+Developed and maintained by **Vijay Mahes**
+- **Email**: [Vijaypradhap2004@gmail.com](mailto:Vijaypradhap2004@gmail.com)
+- **GitHub**: [@vijaymahes9080](https://github.com/vijaymahes9080)
